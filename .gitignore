@@ -1,3 +1,22 @@
-backend/bin/  
-backend/obj/  
-frontend/node_modules/ 
+# VS e .NET
+.vs/
+*.user
+*.suo
+*.dbmdl
+*.bak
+*.log
+
+# Build outputs
+**/bin/
+**/obj/
+**/publish/
+*.pdb
+*.dll
+*.exe
+*.cache
+*.json
+
+# Node/React
+**/node_modules/
+**/build/
+*.log

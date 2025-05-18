@@ -4,8 +4,8 @@ using TurismoApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Permitir conexões de qualquer IP (alterando o URL para 0.0.0.0)
-builder.WebHost.UseUrls("http://0.0.0.0:5077");// Altere para o seu IP local se preferir
+
+builder.WebHost.UseUrls("http://0.0.0.0:5077");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
@@ -20,7 +20,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Se estiver no ambiente de desenvolvimento, ativa o Swagger
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -31,7 +31,7 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-// Aqui vai o código de suas rotas
+
 app.MapGet("/weatherforecast", () =>
 {
     var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
@@ -49,7 +49,7 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
-app.MapControllers();  // Aqui se mapeiam os controladores
+app.MapControllers();  
 
 app.Run();
 

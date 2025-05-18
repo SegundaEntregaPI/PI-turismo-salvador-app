@@ -30,7 +30,11 @@ namespace TurismoApi.Controllers
                 return Unauthorized("Email ou senha inválidos");
             }
 
-            return Ok("Login realizado com sucesso");
+            return Ok(new
+            {
+                message = "Login realizado com sucesso",
+                userId = foundUser.Id
+            });
         }
 
         // CADASTRO
@@ -39,7 +43,6 @@ namespace TurismoApi.Controllers
         {
             Console.WriteLine("Método Register chamado");
 
-            // Verificar se o usuário já existe
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == user.Email);
 
@@ -48,7 +51,6 @@ namespace TurismoApi.Controllers
                 return BadRequest("Este e-mail já está cadastrado");
             }          
 
-            // Adicionar o usuário no banco de dados
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 

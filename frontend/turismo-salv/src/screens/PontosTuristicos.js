@@ -1,70 +1,95 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, Linking } from 'react-native'; 
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, Linking } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../services/api';
 
-const PontosTuristicos = () => {
+const PontosTuristicos = ({ route }) => {
+  const { pontos = [] } = route.params || {};
+  const [userId, setUserId] = useState(null);
+  const [favoritos, setFavoritos] = useState([]);
+
+  useEffect(() => {
+    const carregarUserIdEFavoritos = async () => {
+      const id = await AsyncStorage.getItem('userId');
+      if (id) {
+        setUserId(parseInt(id));
+        const res = await api.get(`/favoritos/user/${id}`);
+        setFavoritos(res.data);
+      }
+    };
+    carregarUserIdEFavoritos();
+  }, []);
+
   const abrirLocalizacao = (latitude, longitude) => {
     const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
-    Linking.openURL(url); 
+    Linking.openURL(url);
+  };
+
+  const isFavorito = (pontoId) => favoritos.some(f => f.nome === pontos.find(p => p.id === pontoId).nome);
+
+  const toggleFavorito = async (ponto) => {
+    if (!userId) return;
+    if (isFavorito(ponto.id)) {
+      try {
+        await api.delete('/favoritos', {
+          data: {
+            userId,
+            pontoTuristicoId: ponto.id,
+            experienciaLocalId: null,
+          },
+        });
+        setFavoritos(favoritos.filter(f => f.nome !== ponto.nome));
+      } catch (err) {
+        console.error('Erro ao desfavoritar:', err);
+      }
+    } else {
+      try {
+        await api.post('/favoritos', {
+          userId,
+          pontoTuristicoId: ponto.id,
+          experienciaLocalId: null,
+        });
+        setFavoritos([...favoritos, { nome: ponto.nome, descricao: ponto.descricao, tipo: 'PontoTuristico' }]);
+      } catch (err) {
+        console.error('Erro ao favoritar:', err);
+      }
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.card}>
-        <Image 
-          source={require('../assets/images/farol-da-barra.jpg')} 
-          style={styles.image} 
-        />
-        <Text style={styles.title}>Farol da Barra</Text>
-        <Text style={styles.description}>
-          O Farol da Barra é um dos cartões postais de Salvador, localizado na entrada da Baía de Todos os Santos.
-        </Text>
-        
-        
-        <TouchableOpacity
-          style={styles.link}
-          onPress={() => abrirLocalizacao(-13.0025, -38.5203)} 
-        >
-          <Text style={styles.linkText}>Localização</Text>
-        </TouchableOpacity>
-      </View>
+      {pontos.map((ponto) => (
+        <View key={ponto.id} style={styles.card}>
+          <Image
+            source={
+              ponto.nome === 'Farol da Barra' 
+                ? require('../assets/images/farol-da-barra.jpg')
+                : ponto.nome === 'Elevador Lacerda'
+                ? require('../assets/images/elevador-lacerda.jpg')
+                : require('../assets/images/basilica-bonfim.jpg')
+            }
+            style={styles.image}
+          />
+          <Text style={styles.title}>{ponto.nome}</Text>
+          <Text style={styles.description}>{ponto.descricao}</Text>
 
-      <View style={styles.card}>
-        <Image 
-          source={require('../assets/images/elevador-lacerda.jpg')} 
-          style={styles.image} 
-        />
-        <Text style={styles.title}>Elevador Lacerda</Text>
-        <Text style={styles.description}>
-          O Elevador Lacerda é um dos cartões-postais de Salvador, ligando a cidade baixa à cidade alta desde 1873.
-        </Text>
+          <TouchableOpacity
+            style={styles.link}
+            onPress={() => abrirLocalizacao(ponto.latitude, ponto.longitude)}
+          >
+            <Text style={styles.linkText}>Localização</Text>
+          </TouchableOpacity>
 
-        
-        <TouchableOpacity
-          style={styles.link}
-          onPress={() => abrirLocalizacao(-12.9714, -38.5108)} 
-        >
-          <Text style={styles.linkText}>Localização</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.card}>
-        <Image 
-          source={require('../assets/images/basilica-bonfim.jpg')} 
-          style={styles.image} 
-        />
-        <Text style={styles.title}>Igreja de Bonfim</Text>
-        <Text style={styles.description}>
-          A Igreja do Bonfim é um dos principais centros de fé de Salvador, famosa por suas fitas coloridas e orações.
-        </Text>
-
-        
-        <TouchableOpacity
-          style={styles.link}
-          onPress={() => abrirLocalizacao(-12.9716, -38.4521)} 
-        >
-          <Text style={styles.linkText}>Localização</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            style={[styles.favButton, isFavorito(ponto.id) ? styles.favoritado : styles.naoFavoritado]}
+            onPress={() => toggleFavorito(ponto)}
+          >
+            <Text style={styles.linkText}>
+              {isFavorito(ponto.id) ? 'Desfavoritar' : 'Favoritar'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ))}
     </ScrollView>
   );
 };
@@ -109,6 +134,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     fontSize: 16,
+  },
+  favButton: {
+    marginTop: 10,
+    paddingVertical: 8,
+    borderRadius: 5,
+  },
+  favoritado: {
+    backgroundColor: '#dc3545',
+  },
+  naoFavoritado: {
+    backgroundColor: '#6c757d',
   },
 });
 

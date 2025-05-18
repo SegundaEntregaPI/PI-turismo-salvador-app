@@ -1,79 +1,91 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import axios from 'axios'; // Importando o axios
+import { View, TextInput, Button, Alert, Text, StyleSheet } from 'react-native';
+import api from '../services/api';
 
 const Cadastro = ({ navigation }) => {
-  const [nome, setNome] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleCadastro = async () => {
-    if (!nome || !email || !senha) {
-      Alert.alert('Preencha todos os campos');
-      return;
+const handleCadastro = async () => {
+  if (!name || !email || !password) {
+    Alert.alert('Erro', 'Por favor, preencha todos os campos.');
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const response = await api.post('/Auth/register', { name, email, password });
+
+    if (response.status >= 200 && response.status < 300) {
+      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+      navigation.navigate('Login');
+    } else {
+      Alert.alert('Erro', 'Erro inesperado ao cadastrar. Tente novamente.');
     }
 
-    try {
-      // Fazendo a requisição POST ao seu back-end
-      const response = await axios.post('http://DESKTOP-EDH81M5:5077/api/Auth/register', {
-        name: nome,
-        email,
-        password: senha  
-      });
+  } catch (error) {
+    console.log('Erro no cadastro:', error.response?.data || error.message);
 
-
-      // Se o cadastro for bem-sucedido
-      if (response.status === 200) {
-        Alert.alert('Cadastro realizado com sucesso');
-        navigation.goBack();  // Volta para a tela de login
-      } else {
-        Alert.alert('Erro ao realizar o cadastro');
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Erro ao realizar o cadastro');
+    if (error.response?.data?.message) {
+      Alert.alert('Erro no cadastro', error.response.data.message);
+    } else {
+      Alert.alert('Erro de conexão', 'Não foi possível se conectar ao servidor.');
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Cadastro</Text>
-
       <TextInput
         style={styles.input}
         placeholder="Nome"
-        value={nome}
-        onChangeText={setNome}
+        value={name}
+        onChangeText={setName}
       />
-
       <TextInput
         style={styles.input}
-        placeholder="E-mail"
-        value={email}
-        onChangeText={setEmail}
+        placeholder="Email"
         keyboardType="email-address"
         autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
       />
-
       <TextInput
         style={styles.input}
         placeholder="Senha"
-        value={senha}
-        onChangeText={setSenha}
         secureTextEntry
+        value={password}
+        onChangeText={setPassword}
       />
-
-      <Button title="Cadastrar" onPress={handleCadastro} />
+      <Button
+        title={loading ? 'Carregando...' : 'Cadastrar'}
+        onPress={handleCadastro}
+        disabled={loading}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 20 },
-  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
   input: {
-    borderWidth: 1, borderColor: '#ccc', padding: 10, borderRadius: 5,
-    marginBottom: 15,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingLeft: 8,
   },
 });
 

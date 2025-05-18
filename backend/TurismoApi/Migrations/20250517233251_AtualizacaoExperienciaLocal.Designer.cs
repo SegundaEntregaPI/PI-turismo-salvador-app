@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoApi.Data;
 
@@ -11,9 +12,11 @@ using TurismoApi.Data;
 namespace TurismoApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250517233251_AtualizacaoExperienciaLocal")]
+    partial class AtualizacaoExperienciaLocal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,13 +136,11 @@ namespace TurismoApi.Migrations
                 {
                     b.HasOne("TurismoApi.Models.ExperienciaLocal", "ExperienciaLocal")
                         .WithMany()
-                        .HasForeignKey("ExperienciaLocalId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ExperienciaLocalId");
 
                     b.HasOne("TurismoApi.Models.PontoTuristico", "PontoTuristico")
                         .WithMany()
-                        .HasForeignKey("PontoTuristicoId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("PontoTuristicoId");
 
                     b.HasOne("TurismoApi.Models.User", "User")
                         .WithMany()

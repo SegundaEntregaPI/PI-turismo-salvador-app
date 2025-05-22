@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bem-vindo a Salvador</title>
+
+  <!-- Importando fonte do Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Faz a imagem cobrir toda a tela */
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      text-align: center;
+      background: url('https://raw.githubusercontent.com/SegundaEntregaPI/PI-turismo-salvador-app/main/9351dd46-5f03-45c5-9524-efdbd3d451b8.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 20px;
+    }
+
+    /* Fundo escuro semi-transparente atrás do texto para melhorar a leitura */
+    .content {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 40px 30px;
+      border-radius: 15px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    }
+
+    a.btn-saiba-mais {
+      display: inline-block;
+      background-color: #f4a261;
+      color: #2a1a01;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    a.btn-saiba-mais:hover {
+      background-color: #e07b39;
+    }
+
+    footer {
+      margin-top: 40px;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+      font-size: 0.9rem;
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+      .content {
+        padding: 25px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <h1>Turismo Saudável em Salvador</h1>
+    <p>
+      Nosso aplicativo foi criado para promover o turismo saudável em Salvador, unindo bem-estar, saúde pública e valorização cultural. Ele ajuda moradores e visitantes a explorarem a cidade com segurança, emoção e conexão com suas raízes, resgatando memórias afetivas e destacando a importância da saúde física e mental durante a experiência turística.
+    </p>
+    <a href="#" class="btn-saiba-mais">Saiba mais</a>
+  </div>
+
+  <footer>
+    &copy; 2025 Turismo Saudável Salvador — Projeto acadêmico
+  </footer>
+</body>
+</html>

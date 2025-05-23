@@ -1,19 +1,19 @@
 Integrantes:
 
 Bárbara Andressa Oliveira Silva
-B-Drops
+-B-Drops
 
 Carlos Eduardo Damião Sousa
-Edusousa7
+-Edusousa7
 
 Fernando Luiz Pereira 
-nandooxd
+-nandooxd
 
 Lorrany Luzia da Silva Moraes 
-lorranysmoraes
+-lorranysmoraes
 
 Victor Hugo Moura Pontes
-Victorhmp92
+-Victorhmp92
 
 
 
